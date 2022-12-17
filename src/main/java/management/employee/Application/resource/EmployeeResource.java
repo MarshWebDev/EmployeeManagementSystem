@@ -1,23 +1,21 @@
 package management.employee.Application.resource;
 
 import lombok.AllArgsConstructor;
-import management.employee.Application.repository.EmployeeRepo;
+import management.employee.Application.controller.EmployeeController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping
 @AllArgsConstructor
-public class EmployeeController {
+public class EmployeeResource {
 
-    private final EmployeeRepo employeeRepo;
+    private final EmployeeController employeeController;
 
-    @GetMapping("/employees")
-    String getPeople(Model model) {
+    @GetMapping(path = "/employees")
+    public String getEmployees(Model model) {
         model.addAttribute("something", "coming from the controller");
-        model.addAttribute("employees", employeeRepo.findAll());
+        model.addAttribute("employees", employeeController.getEmployees());
         return "employees";
     }
 }
