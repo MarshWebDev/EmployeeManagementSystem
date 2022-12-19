@@ -15,7 +15,7 @@ public class EmployeeImage {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(
             name = "employee_id",
             referencedColumnName = "id",

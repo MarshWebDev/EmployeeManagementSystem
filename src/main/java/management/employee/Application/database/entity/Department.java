@@ -28,5 +28,8 @@ public class Department {
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private List<Wage> wages = new ArrayList<>();
 
-
+    public Department(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

@@ -1,5 +1,6 @@
 package management.employee.Application.database.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,30 +35,39 @@ public class Employee {
     private Long phone;
     @Column(unique = true)
     private Long ssn;
+    private String position;
     private LocalDateTime createdAt;
-    private Boolean enabled = false;
+    private Boolean enabled = true;
     private Boolean locked = false;
 
+    @JsonIgnore
     @OneToOne(cascade = ALL, orphanRemoval = true)
     private ConfirmationToken confirmationToken;
 
+    @JsonIgnore
     @OneToOne(cascade = ALL, mappedBy = "employee")
     private EmployeeImage employeeImage;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private List<Attendance> attendances = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private List<Leaves> leaves = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private List<Paystub> paystubs = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "department_id", referencedColumnName = "id",
+    @JoinColumn(
+            name = "department_id",
+            referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "department_id_fk"))
     private Department department;
 
+    @JsonIgnore
     @ManyToMany(cascade = ALL, fetch = EAGER)
     @JoinTable(
             name = "employee_roles",
@@ -73,18 +83,20 @@ public class Employee {
     private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role) {
-        roles.add(role);
+        this.roles.add(role);
         role.getEmployees().add(this);
     }
 
-    public Employee(String firstName, String lastName, String email, Long phone, Long ssn, LocalDateTime createdAt, Boolean enabled, Boolean locked) {
+    public Employee(String firstName, String lastName, String email, Long phone, Long ssn, LocalDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.ssn = ssn;
         this.createdAt = createdAt;
-        this.enabled = enabled;
-        this.locked = locked;
+    }
+
+    public String getEmployeeImage() {
+        return this.employeeImage.getImageUrl();
     }
 }
