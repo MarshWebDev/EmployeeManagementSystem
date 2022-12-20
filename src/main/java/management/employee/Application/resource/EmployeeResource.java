@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import management.employee.Application.database.entity.Employee;
 import management.employee.Application.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -19,9 +21,11 @@ public class EmployeeResource implements Serializable {
     @Autowired
     private final EmployeeService employeeService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Employee>> getAllEmployees() {
-        List<Employee> employees = employeeService.findAllEmployees();
+    @GetMapping(value = "/all")
+    public ResponseEntity<Page<Employee>> getAllEmployees(
+            @RequestParam Optional<Integer> page
+    ) {
+        Page<Employee> employees = employeeService.getEmployees(page.orElse(0));
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 

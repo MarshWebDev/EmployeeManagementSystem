@@ -1,16 +1,16 @@
 package management.employee.Application.config;
 
 import lombok.AllArgsConstructor;
-import management.employee.Application.database.entity.Department;
 import management.employee.Application.database.entity.Employee;
 import management.employee.Application.repo.DepartmentRepo;
 import management.employee.Application.repo.EmployeeRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Optional;
+import com.github.javafaker.Faker;
+
+import java.time.LocalDateTime;
 
 @Configuration
 @AllArgsConstructor
@@ -22,8 +22,25 @@ public class TestingConfig {
             DepartmentRepo departmentRepo
     ) {
         return args -> {
-            departmentRepo.findById(4L).ifPresent(department ->
-                    System.out.println(department.getName()));
+
         };
+    }
+
+    public void generate50People(EmployeeRepo employeeRepo) {
+        Faker faker = new Faker();
+        for (int i = 0; i <= 50; i++) {
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@gmail.com", firstName, lastName);
+            Employee employee = new Employee(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().randomNumber(9, false),
+                    faker.number().randomNumber(9, false),
+                    LocalDateTime.now()
+            );
+            employeeRepo.save(employee);
+        }
     }
 }
