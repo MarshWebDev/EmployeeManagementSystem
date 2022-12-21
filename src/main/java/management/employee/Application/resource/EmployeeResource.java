@@ -2,6 +2,7 @@ package management.employee.Application.resource;
 
 import lombok.AllArgsConstructor;
 import management.employee.Application.database.entity.Employee;
+import management.employee.Application.dto.AddEmployeeDto;
 import management.employee.Application.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -36,8 +36,8 @@ public class EmployeeResource implements Serializable {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
-        Employee newEmployee = employeeService.addEmployee(employee);
+    public ResponseEntity<Employee> addEmployee(@RequestBody AddEmployeeDto addEmployeeDto) {
+        Employee newEmployee = employeeService.addEmployee(addEmployeeDto.getEmployee(), addEmployeeDto.getDepartmentId());
         return new ResponseEntity<>(newEmployee, HttpStatus.CREATED);
     }
 

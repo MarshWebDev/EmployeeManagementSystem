@@ -1,20 +1,24 @@
 package management.employee.Application.service;
 
 import lombok.AllArgsConstructor;
+import management.employee.Application.database.entity.Department;
 import management.employee.Application.database.entity.Employee;
 import management.employee.Application.exception.BadRequestException;
+import management.employee.Application.repo.DepartmentRepo;
 import management.employee.Application.repo.EmployeeRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service @AllArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepo employeeRepo;
+    private final DepartmentRepo departmentRepo;
 
 //    public List<Employee> findAllEmployees() {
 //        return employeeRepo.findAll();
@@ -34,8 +38,18 @@ public class EmployeeService {
                 new BadRequestException("Employee by id " + id + " was not found"));
     }
 
-    public Employee addEmployee(Employee employee) {
-        return employeeRepo.save(employee);
+    public Employee addEmployee(Employee employee, Long departmentId) {
+        Employee newEmployee = new Employee(
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmail(),
+                employee.getPhone(),
+                employee.getSsn(),
+                employee.getPosition(),
+                LocalDateTime.now()
+        );
+        employee.setDepartment(departmentRepo.findById(departmentId));
+        return employeeRepo.save(newEmployee);
     }
 
     public Employee updateEmployee(Employee employee) {

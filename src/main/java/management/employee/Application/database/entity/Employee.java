@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.EAGER;
@@ -60,12 +57,17 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Paystub> paystubs = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = ALL)
     @JoinColumn(
             name = "department_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "department_id_fk"))
     private Department department;
+
+    public void setDepartment(Optional<Department> department) {
+        this.department = department.get();
+        department.get().getEmployees().add(this);
+    }
 
     @JsonIgnore
     @ManyToMany(cascade = ALL, fetch = EAGER)
@@ -87,12 +89,13 @@ public class Employee {
         role.getEmployees().add(this);
     }
 
-    public Employee(String firstName, String lastName, String email, Long phone, Long ssn, LocalDateTime createdAt) {
+    public Employee(String firstName, String lastName, String email, Long phone, Long ssn, String position, LocalDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.ssn = ssn;
+        this.position = position;
         this.createdAt = createdAt;
     }
 

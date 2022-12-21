@@ -1,5 +1,6 @@
 package management.employee.Application.database.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +23,11 @@ public class Department {
     private String name;
     private String description;
 
+    @JsonIgnore
     @OneToMany(cascade = ALL)
     private List<Employee> employees = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
     private List<Wage> wages = new ArrayList<>();
 
